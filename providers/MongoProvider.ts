@@ -1,4 +1,5 @@
 import type { ApplicationContract } from '@ioc:Adonis/Core/Application'
+import { Mongoose } from 'mongoose'
 
 /*
 |--------------------------------------------------------------------------
@@ -20,11 +21,25 @@ import type { ApplicationContract } from '@ioc:Adonis/Core/Application'
 |
 */
 export default class MongoProvider {
+  application: any
   constructor(protected app: ApplicationContract) {}
 
-  public register() {
-    // Register your own bindings
+  public register () {
+    // Create new Mongoose instance
+    const mongoose = new Mongoose()
+  
+    // Connect the instance to DB
+    mongoose.connect('mongodb://localhost/my_database', {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      useFindAndModify: false,
+      useCreateIndex: true,
+    })
+  
+    // Attach it to IOC container as singleton
+    this.application.container.singleton('Mongoose', () => mongoose)
   }
+  
 
   public async boot() {
     // All bindings are ready, feel free to use them
@@ -34,7 +49,11 @@ export default class MongoProvider {
     // App is ready
   }
 
-  public async shutdown() {
+  public async shutdown () {
     // Cleanup, since app is going down
+    // Going to take the Mongoose singleton from container
+    // and call disconnect() on it
+    // which tells Mongoose to gracefully disconnect from MongoBD server
+    await this.application.container.use('Mongoose').disconnect()
   }
 }

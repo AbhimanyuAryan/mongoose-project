@@ -1,0 +1,24 @@
+{
+  "name": "mongoose-provider",
+  "version": "1.0.0",
+  "description": "",
+  "main": "build/providers/MongooseProvider.js",
+  "scripts": {
+    "pretest": "npm run lint && tsc --noEmit",
+    "test": "node japaFile.js",
+    "mrm": "mrm --preset=@adonisjs/mrm-preset",
+    "lint": "eslint . --ext=.ts",
+    "clean": "del build",
+    "compile": "npm run lint && npm run clean && tsc",
+    "build": "npm run compile",
+    "prepublishOnly": "npm run build"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@adonisjs/mrm-preset": "^5.0.3",
+    "japa": "^4.0.0",
+    "mrm": "^4.1.14",
+    "typescript": "^5.0.3"
+  }
+}
